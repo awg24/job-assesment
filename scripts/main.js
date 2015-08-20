@@ -13,13 +13,13 @@ var containerEl = document.getElementById("container");
 var megaObj = Cookies.getJSON();
 var tempArray = [];
 
-for(var people in megaObj){
-	var user = new User();
-	for(var props in megaObj[people]){
-		user.set(props, megaObj[people][props])
-	}
-	tempArray.push(user);	
-}
+// for(var people in megaObj){
+// 	var user = new User();
+// 	for(var props in megaObj[people]){
+// 		user.set(props, megaObj[people][props])
+// 	}
+// 	tempArray.push(user);	
+// } populate collection with users
 
 var Blog = Backbone.Router.extend({
 	routes: {
