@@ -11,28 +11,23 @@ module.exports = React.createClass({
 	},
 	render: function(){
 		return (
-		<div className="panel panel-primary shape">
-			<div className="panel-heading">
-				<h3 className="panel-title">Login</h3>
+		<div className="text-center change-line shape shift-more-down">
+			<div className="text-left">
+				<h3>Login</h3>
 			</div>
-			<form onSubmit={this.loginUser} className="form-horizontal text-center">
-				<div className="panel-body">
-					<div>
-						Username: <input ref="username" type="text"/>
-					</div>
+			<br/>
+			<form onSubmit={this.loginUser}>
+					<input ref="username" className="style-input2" placeholder="username" type="text"/>
 					<label className="error">{this.state.errors.username}</label>
-					<br/>
-					<div>
-						Password: <input className="small-margin" ref="password" type="password"/>
-					</div>
+					<br/><br/>
+					<input className="style-input2" ref="password" type="password" placeholder="super secret password"/>
 					<label className="error">{this.state.errors.password}</label>
-				</div>
-				<div className="center-block small-block">
+					<br/><br/>
 					admin:  <input name="user-type" value="admin" type="radio"/>
 					<div className="in-line"> </div>
 					reader: <input name="user-type" value="reader" type="radio"/>
-				</div>
 				<label className="error">{this.state.errors.userType}</label>
+				<br/><br/>
 				<input type="submit" className="btn btn-primary btn-md center-block add-bottom-margin"Login />
 			</form>
 		</div>

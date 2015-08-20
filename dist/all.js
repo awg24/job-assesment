@@ -33278,7 +33278,13 @@ module.exports = React.createClass({
 	},
 	render: function render() {
 		var links = [];
+		var button = [];
 		if (this.props.user.userType === "admin") {
+			button.push(React.createElement(
+				"button",
+				{ onClick: this.openModal, className: "btn btn-primary" },
+				"Submit a New Post!"
+			));
 			links.push(React.createElement(
 				"button",
 				{ key: "button1", className: "btn btn-info space" },
@@ -33336,11 +33342,7 @@ module.exports = React.createClass({
 					null,
 					"Recent Posts!"
 				),
-				React.createElement(
-					"button",
-					{ onClick: this.openModal, className: "btn btn-primary" },
-					"Submit a New Post!"
-				)
+				button
 			),
 			React.createElement(
 				Modal,
@@ -33407,64 +33409,52 @@ module.exports = React.createClass({
 	render: function render() {
 		return React.createElement(
 			"div",
-			{ className: "panel panel-primary shape" },
+			{ className: "text-center change-line shape shift-more-down" },
 			React.createElement(
 				"div",
-				{ className: "panel-heading" },
+				{ className: "text-left" },
 				React.createElement(
 					"h3",
-					{ className: "panel-title" },
+					null,
 					"Login"
 				)
 			),
+			React.createElement("br", null),
 			React.createElement(
 				"form",
-				{ onSubmit: this.loginUser, className: "form-horizontal text-center" },
+				{ onSubmit: this.loginUser },
+				React.createElement("input", { ref: "username", className: "style-input2", placeholder: "username", type: "text" }),
+				React.createElement(
+					"label",
+					{ className: "error" },
+					this.state.errors.username
+				),
+				React.createElement("br", null),
+				React.createElement("br", null),
+				React.createElement("input", { className: "style-input2", ref: "password", type: "password", placeholder: "super secret password" }),
+				React.createElement(
+					"label",
+					{ className: "error" },
+					this.state.errors.password
+				),
+				React.createElement("br", null),
+				React.createElement("br", null),
+				"admin:  ",
+				React.createElement("input", { name: "user-type", value: "admin", type: "radio" }),
 				React.createElement(
 					"div",
-					{ className: "panel-body" },
-					React.createElement(
-						"div",
-						null,
-						"Username: ",
-						React.createElement("input", { ref: "username", type: "text" })
-					),
-					React.createElement(
-						"label",
-						{ className: "error" },
-						this.state.errors.username
-					),
-					React.createElement("br", null),
-					React.createElement(
-						"div",
-						null,
-						"Password: ",
-						React.createElement("input", { className: "small-margin", ref: "password", type: "password" })
-					),
-					React.createElement(
-						"label",
-						{ className: "error" },
-						this.state.errors.password
-					)
+					{ className: "in-line" },
+					" "
 				),
-				React.createElement(
-					"div",
-					{ className: "center-block small-block" },
-					"admin:  ",
-					React.createElement("input", { name: "user-type", value: "admin", type: "radio" }),
-					React.createElement(
-						"div",
-						{ className: "in-line" },
-						" "
-					),
-					"reader: ",
-					React.createElement("input", { name: "user-type", value: "reader", type: "radio" })
-				),
+				"reader: ",
+				React.createElement("input", { name: "user-type", value: "reader", type: "radio" }),
 				React.createElement(
 					"label",
 					{ className: "error" },
 					this.state.errors.userType
 				),
+				React.createElement("br", null),
+				React.createElement("br", null),
 				React.createElement("input", { type: "submit", className: "btn btn-primary btn-md center-block add-bottom-margin", Login: true })
 			)
 		);
@@ -33740,6 +33730,7 @@ var Blog = Backbone.Router.extend({
 		"blogs/page/:num/:fromUser": "blogs"
 	},
 	login: function login() {
+		var user = new User();
 		React.render(React.createElement(Login, { myRoutes: this, loggingIn: user, users: userCollection }), containerEl);
 	},
 	blogs: function blogs(num, fromUser) {

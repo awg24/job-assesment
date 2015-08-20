@@ -20,7 +20,9 @@ module.exports = React.createClass({
 	 },
 	render: function(){
 		var links = [];
+		var button = [];
 		if(this.props.user.userType === "admin"){
+			button.push(<button onClick={this.openModal} className="btn btn-primary">Submit a New Post!</button>);
 			links.push(<button key="button1" className="btn btn-info space">Edit</button>);
 			links.push(<button key="button2" className="btn btn-info space">Delete</button>);
 		}
@@ -47,7 +49,7 @@ module.exports = React.createClass({
 		<div>
 			<div className="text-center">
 				<h1>Recent Posts!</h1>
-				<button onClick={this.openModal} className="btn btn-primary">Submit a New Post!</button>
+				{button}
 			</div>
 			<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal}>
 				<NewPost closeModal={this.closeModal} blogCollection={blogCollection}/>

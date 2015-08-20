@@ -1,9 +1,20 @@
+@-ms-viewport{
+ width: device-width;
+}
 .shape {
 	margin-top: 225px;
 	width: 300px;
 	margin-left: auto;
 	margin-right: auto;
-	box-shadow: 2px 2px 10px black;
+}
+.change-line {
+	line-height: 20px;
+}
+.change-margin {
+	margin-left: 5px;
+}
+.change-margin-span {
+	margin-left: 6px;
 }
 .small-block {
 	width: 155px;
@@ -29,17 +40,21 @@
 	width: 600px;
 	background: white;
 	padding: 15px;
-	box-shadow: 2px 2px 15px black;
+	box-shadow: 1px 1px 3px #757575;
 	margin-bottom: 15px;
 }
 .small-width {
 	width: 450px;
 }
+button {
+	font-weight: bold;
+}
 body {
-	background: #83BBE0;
+	background: rgb(250,250,250);
+	font-family: 'Raleway', sans-serif;
 }
 .content-box {
-	border: 1px solid black;
+	border: 1px solid #eeeeee;
 }
 .padit {
 	padding: 10px;
@@ -47,10 +62,21 @@ body {
 .shift-down {
 	margin-top: 150px;
 }
+.shift-more-down {
+	margin-top: 225px;
+}
 .style-input {
 	width: 400px;
 	padding: 20px;
 	padding-top: 10px;
+	border: none;
+	border-bottom: 1px solid black;
+}
+.style-input2 {
+	width: 300px;
+	padding: 10px;
+	padding-top: 10px;
+	background: rgb(250,250,250);
 	border: none;
 	border-bottom: 1px solid black;
 }
@@ -60,4 +86,9 @@ body {
 }
 .overflow {
 	overflow: hidden;
+}
+@media(max-width: 615px){
+	.blog-card {
+		width: 300px;
+	}
 }

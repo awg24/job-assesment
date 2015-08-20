@@ -27,6 +27,7 @@ var Blog = Backbone.Router.extend({
 		"blogs/page/:num/:fromUser": "blogs"
 	},
 	login: function(){
+		var user = new User();
 		React.render(<Login myRoutes={this} loggingIn={user} users={userCollection}/>,containerEl);
 	},
 	blogs: function(num, fromUser){
