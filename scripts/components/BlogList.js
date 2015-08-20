@@ -5,12 +5,30 @@ var _ = require("backbone/node_modules/underscore");
 var NewPost = require("./NewPost");
 var SingleView = require("./SingleView");
 var BlogCollection = require("../collections/BlogCollection");
+var FakePost = require("../models/BlogModel");
 var blogCollection = new BlogCollection();
+
 var containerEl = document.getElementById("container");
 Modal.setAppElement(containerEl);
 Modal.injectCSS()
 
 module.exports = React.createClass({
+	componentWillMount: function(){
+		if(blogCollection.length === 0){
+			for(var i = 0; i < 16; i++){
+				var fakePost = new FakePost();
+				fakePost.set("id", i);
+				fakePost.set("title", "Title "+i);
+				fakePost.set("feelings", "content "+i);
+				if(i < 10){
+					fakePost.set("createdAt", new Date('December 17, 1995 03:24:0'+i));
+				} else {
+					fakePost.set("createdAt", new Date('December 17, 1995 03:24:'+i));
+				}
+				blogCollection.add(fakePost);
+			}
+		}
+	},
 	getInitialState: function() {
 		return { 
 			modalIsOpen: false,
@@ -22,7 +40,7 @@ module.exports = React.createClass({
 		var links = [];
 		var button = [];
 		if(this.props.user.userType === "admin"){
-			button.push(<button onClick={this.openModal} className="btn btn-primary">Submit a New Post!</button>);
+			button.push(<button key="add button" onClick={this.openModal} className="btn btn-primary">Submit a New Post!</button>);
 			links.push(<button key="button1" className="btn btn-info space">Edit</button>);
 			links.push(<button key="button2" className="btn btn-info space">Delete</button>);
 		}

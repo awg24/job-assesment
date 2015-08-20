@@ -1,6 +1,6 @@
 var React = require("react");
 var BlogModel = require("../models/BlogModel");
-var blogID = 0;
+var blogID = 16;
 module.exports = React.createClass({
 	getInitialState: function(){
 		return {
@@ -35,6 +35,7 @@ module.exports = React.createClass({
 			var that = this;
 			blogID++;
 			this.props.blogCollection.add(blog);
+			console.log(this.props.blogCollection);
 			window.setTimeout(function(){
 				that.props.closeModal();
 			}, 1500);

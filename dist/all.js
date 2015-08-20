@@ -33261,7 +33261,9 @@ var _ = require("backbone/node_modules/underscore");
 var NewPost = require("./NewPost");
 var SingleView = require("./SingleView");
 var BlogCollection = require("../collections/BlogCollection");
+var FakePost = require("../models/BlogModel");
 var blogCollection = new BlogCollection();
+
 var containerEl = document.getElementById("container");
 Modal.setAppElement(containerEl);
 Modal.injectCSS();
@@ -33269,6 +33271,22 @@ Modal.injectCSS();
 module.exports = React.createClass({
 	displayName: "exports",
 
+	componentWillMount: function componentWillMount() {
+		if (blogCollection.length === 0) {
+			for (var i = 0; i < 16; i++) {
+				var fakePost = new FakePost();
+				fakePost.set("id", i);
+				fakePost.set("title", "Title " + i);
+				fakePost.set("feelings", "content " + i);
+				if (i < 10) {
+					fakePost.set("createdAt", new Date('December 17, 1995 03:24:0' + i));
+				} else {
+					fakePost.set("createdAt", new Date('December 17, 1995 03:24:' + i));
+				}
+				blogCollection.add(fakePost);
+			}
+		}
+	},
 	getInitialState: function getInitialState() {
 		return {
 			modalIsOpen: false,
@@ -33282,7 +33300,7 @@ module.exports = React.createClass({
 		if (this.props.user.userType === "admin") {
 			button.push(React.createElement(
 				"button",
-				{ onClick: this.openModal, className: "btn btn-primary" },
+				{ key: "add button", onClick: this.openModal, className: "btn btn-primary" },
 				"Submit a New Post!"
 			));
 			links.push(React.createElement(
@@ -33390,7 +33408,7 @@ function pagination(array, page) {
 	return sectionOf;
 }
 
-},{"../collections/BlogCollection":171,"./NewPost":175,"./Pagination":177,"./SingleView":178,"backbone/node_modules/underscore":2,"react":170,"react-modal":13}],174:[function(require,module,exports){
+},{"../collections/BlogCollection":171,"../models/BlogModel":180,"./NewPost":175,"./Pagination":177,"./SingleView":178,"backbone/node_modules/underscore":2,"react":170,"react-modal":13}],174:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -33484,7 +33502,7 @@ module.exports = React.createClass({
 
 var React = require("react");
 var BlogModel = require("../models/BlogModel");
-var blogID = 0;
+var blogID = 16;
 module.exports = React.createClass({
 	displayName: "exports",
 
@@ -33545,6 +33563,7 @@ module.exports = React.createClass({
 			var that = this;
 			blogID++;
 			this.props.blogCollection.add(blog);
+			console.log(this.props.blogCollection);
 			window.setTimeout(function () {
 				that.props.closeModal();
 			}, 1500);
