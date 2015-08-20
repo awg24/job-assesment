@@ -51,8 +51,9 @@ module.exports = React.createClass({
 			this.setState({errors: user.validationError})
 		} else {
 			userCount++;
-			Cookies.set(user.get("username"), user.id);
-			this.props.myRoutes.navigate("blogs/page/"+1, {trigger: true});
+			this.props.users.add(user);
+			Cookies.set(user.get("username"), user);
+			this.props.myRoutes.navigate("blogs/page/"+1+"/"+user.get("username"), {trigger: true});
 		}
 	}
 });

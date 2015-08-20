@@ -22,12 +22,18 @@
 .error {
 	color: red;
 }
+.success {
+	color: green;
+}
 .blog-card {
 	width: 600px;
 	background: white;
 	padding: 15px;
 	box-shadow: 2px 2px 15px black;
 	margin-bottom: 15px;
+}
+.small-width {
+	width: 450px;
 }
 body {
 	background: #83BBE0;
@@ -37,4 +43,21 @@ body {
 }
 .padit {
 	padding: 10px;
+}
+.shift-down {
+	margin-top: 150px;
+}
+.style-input {
+	width: 400px;
+	padding: 20px;
+	padding-top: 10px;
+	border: none;
+	border-bottom: 1px solid black;
+}
+.space {
+	margin-right: 15px;
+	margin-top: 15px;
+}
+.overflow {
+	overflow: hidden;
 }

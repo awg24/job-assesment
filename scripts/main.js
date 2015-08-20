@@ -4,25 +4,38 @@ var Backbone = require("backbone");
 var Login = require("./components/Login");
 var BlogList = require("./components/BlogList");
 var NewPost = require("./components/NewPost");
+var NoPermission = require("./components/NoPermission");
 var User = require("./models/UserModel");
+var UserCollection = require("./collections/UserCollection");
+var userCollection = new UserCollection();
+var Cookies = require("js-cookie");
 var containerEl = document.getElementById("container");
+var megaObj = Cookies.getJSON();
+var tempArray = [];
 
-var user = new User();
+for(var people in megaObj){
+	var user = new User();
+	for(var props in megaObj[people]){
+		user.set(props, megaObj[people][props])
+	}
+	tempArray.push(user);	
+}
 
 var Blog = Backbone.Router.extend({
 	routes: {
 		"": "login",
-		"blogs/page/:num": "blogs",
-		"post": "post"
+		"blogs/page/:num/:fromUser": "blogs"
 	},
 	login: function(){
-		React.render(<Login myRoutes={this} loggingIn={user}/>,containerEl);
+		React.render(<Login myRoutes={this} loggingIn={user} users={userCollection}/>,containerEl);
 	},
-	blogs: function(num){
-		React.render(<BlogList myRoutes={this} loggedIn={user} page={num}/>, containerEl);
-	},
-	post: function(){
-		React.render(<NewPost myRoutes={this} loggedIn={user} />, containerEl);
+	blogs: function(num, fromUser){
+		var loggedIn = Cookies.getJSON(fromUser);
+		if(loggedIn){
+			React.render(<BlogList myRoutes={this} user={loggedIn} page={num}/>, containerEl);
+		} else {
+			React.render(<NoPermission/>, containerEl);
+		}
 	}
 });
 

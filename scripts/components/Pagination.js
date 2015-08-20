@@ -3,26 +3,26 @@ var React = require("react");
 module.exports = React.createClass({
 	getInitialState: function(){
 		return {
-			currentPage: parseInt(this.props.page)
+			currentPage: 1
 		};
 	},
 	render: function(){
 		var that = this;
 		var nums = getPageNumbers(this.props.content);
 		var pages = nums.map(function(num, index){
-			return (<li key={index}><a onClick={that.setNum} value={num} href={"#blogs/page/"+num}>{num}</a></li>);
+			return (<li key={index}><a onClick={that.setNum} value={num} href={"#blogs/page/"+num+"/"+that.props.user.username}>{num}</a></li>);
 		});
 		return (
 		<nav className="text-center">
 		  <ul className="pagination">
 			<li>
-			  <a onClick={this.goBack} value={this.state.currentPage} href={"#blogs/page/"+this.state.currentPage} aria-label="Previous">
+			  <a onClick={this.goBack} value={this.state.currentPage} href={"#blogs/page/"+this.state.currentPage+"/"+this.props.user.username} aria-label="Previous">
 				<span aria-hidden="true">&laquo;</span>
 			  </a>
 			</li>
 			{pages}
 			<li>
-			  <a onClick={this.goForward} value={this.state.currentPage} href={"#blogs/page/"+this.state.currentPage} aria-label="Next">
+			  <a onClick={this.goForward} value={this.state.currentPage} href={"#blogs/page/"+this.state.currentPage+"/"+this.props.user.username} aria-label="Next">
 				<span aria-hidden="true">&raquo;</span>
 			  </a>
 			</li>
@@ -40,7 +40,7 @@ module.exports = React.createClass({
 		}
 	},
 	goForward: function(){
-		if(this.state.currentPage !== Math.ceil(this.props.content.length/5)){
+		if(this.state.currentPage < Math.ceil(this.props.content.length/5)){
 			var newNum = this.state.currentPage + 1;
 			this.setState({currentPage: newNum});
 		}

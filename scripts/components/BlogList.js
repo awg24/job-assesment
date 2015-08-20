@@ -1,49 +1,45 @@
 var React = require("react");
 var Pages = require("./Pagination");
-var content = [{id:"a",title:"im title 1", content: "im content 1"},
-				{id:"b",title:"im title 2", content: "im content 2"},
-				{id:"c",title:"im title 3", content: "im content 3"},
-				{id:"d",title:"im title 4", content: "im content 4"},
-				{id:"e",title:"im title 5", content: "im content 5"},
-				{id:"f",title:"im title 6", content: "im content 6"},
-				{id:"g",title:"im title 7", content: "im content 7"},
-				{id:"h",title:"im title 8", content: "im content 8"},
-				{id:"i",title:"im title 9", content: "im content 9"},
-				{id:"j",title:"im title 10", content: "im content 10"},
-				{id:"k",title:"im title 11", content: "im content 11"},
-				{id:"l",title:"im title 12", content: "im content 12"},
-				{id:"m",title:"im title 1", content: "im content 1"},
-				{id:"n",title:"im title 2", content: "im content 2"},
-				{id:"o",title:"im title 3", content: "im content 3"},
-				{id:"p",title:"im title 4", content: "im content 4"},
-				{id:"q",title:"im title 5", content: "im content 5"},
-				{id:"r",title:"im title 6", content: "im content 6"},
-				{id:"s",title:"im title 7", content: "im content 7"},
-				{id:"t",title:"im title 8", content: "im content 8"},
-				{id:"u",title:"im title 9", content: "im content 9"},
-				{id:"v",title:"im title 10", content: "im content 10"},
-				{id:"w",title:"im title 11", content: "im content 11"},
-				{id:"x",title:"im title 12", content: "im content 12"},
-				{id:"y",title:"im title 10", content: "im content 10"},
-				{id:"z",title:"im title 11", content: "im content 11"},
-				{id:"aa",title:"im title 12", content: "im content 12"},
-				{id:"ab",title:"im title 1", content: "im content 1"},
-				{id:"ac",title:"im title 2", content: "im content 2"}];
+var Modal = require("react-modal");
+var _ = require("backbone/node_modules/underscore");
+var NewPost = require("./NewPost");
+var SingleView = require("./SingleView");
+var BlogCollection = require("../collections/BlogCollection");
+var blogCollection = new BlogCollection();
+var containerEl = document.getElementById("container");
+Modal.setAppElement(containerEl);
+Modal.injectCSS()
 
 module.exports = React.createClass({
+	getInitialState: function() {
+		return { 
+			modalIsOpen: false,
+			modalIsOpen2: false, 
+			modelToGet: null
+		};
+	 },
 	render: function(){
+		var links = [];
+		if(this.props.user.userType === "admin"){
+			links.push(<button key="button1" className="btn btn-info space">Edit</button>);
+			links.push(<button key="button2" className="btn btn-info space">Delete</button>);
+		}
 		var that = this;
-		var pagedContent = pagination(content,this.props.page);
+		var sortedCollection = _.sortBy(blogCollection.models, function(blog){
+			return -1*blog.get("createdAt").getTime();
+		});
+		var pagedContent = pagination(sortedCollection,this.props.page);
 		var blogs = pagedContent.map(function(blog, index){
 			return (
-			<div key={blog.id} className="blog-card center-block">
-				<a href="#post">View</a>
+			<div key={blog.cid} className="blog-card center-block">
+				<button className="btn btn-primary" value={blog.id} onClick={that.openModal2}>View</button>
 				<div className="text-center">
-					<h3>{blog.title}</h3>
+					<h3>{blog.get("title")}</h3>
 				</div>
 				<div className="content-box padit">
-					<p>{blog.content}</p>
+					<p>{blog.get("feelings")}</p>
 				</div>
+				{links}
 			</div>
 			);
 		});
@@ -51,17 +47,32 @@ module.exports = React.createClass({
 		<div>
 			<div className="text-center">
 				<h1>Recent Posts!</h1>
-				<button onClick={this.newPost} className="btn btn-primary">Submit a New Post!</button>
+				<button onClick={this.openModal} className="btn btn-primary">Submit a New Post!</button>
 			</div>
+			<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal}>
+				<NewPost closeModal={this.closeModal} blogCollection={blogCollection}/>
+			</Modal>
+			<Modal isOpen={this.state.modalIsOpen2} onRequestClose={this.closeModal2}>
+				<SingleView closeModal={this.closeModal2} blog={blogCollection.get(this.state.modelToGet)}/>
+			</Modal>
 			<br/>
 			{blogs}
-			<Pages page={this.props.page} myRoutes={this.props.myRoutes} content={content} />
+			<Pages page={this.props.page} myRoutes={this.props.myRoutes} user={this.props.user} content={blogCollection} />
 		</div>
 		);
 	},
-	newPost: function(){
-		this.props.myRoutes.navigate("post", {trigger: true});
-	}
+	openModal: function() {
+		this.setState({modalIsOpen: true});
+	},
+	closeModal: function() {
+		this.setState({modalIsOpen: false});
+	},
+	openModal2: function() {
+		this.setState({modalIsOpen2: true, modelToGet:event.target.value});
+	},
+	closeModal2: function() {
+		this.setState({modalIsOpen2: false});
+	},
 });
 function pagination(array, page){
 	var sectionOf = [];
@@ -73,7 +84,7 @@ function pagination(array, page){
 	}
 	stop = start + 4;
 	if(stop > array.length-1){
-	    stop = array.length-1;
+		stop = array.length-1;
 	}
 	for(var j = start; j <= stop; j++){
 		sectionOf.push(array[j]);
