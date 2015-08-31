@@ -33305,12 +33305,12 @@ module.exports = React.createClass({
 			));
 			links.push(React.createElement(
 				"button",
-				{ key: "button1", className: "btn btn-info space" },
+				{ key: "button1", onClick: this.editPost, className: "btn btn-info space" },
 				"Edit"
 			));
 			links.push(React.createElement(
 				"button",
-				{ key: "button2", className: "btn btn-info space" },
+				{ key: "button2", onClick: this.deletePost, className: "btn btn-info space" },
 				"Delete"
 			));
 		}
@@ -33322,7 +33322,7 @@ module.exports = React.createClass({
 		var blogs = pagedContent.map(function (blog, index) {
 			return React.createElement(
 				"div",
-				{ key: blog.cid, className: "blog-card center-block" },
+				{ key: blog.cid, value: blog.cid, className: "blog-card center-block" },
 				React.createElement(
 					"button",
 					{ className: "btn btn-primary", value: blog.id, onClick: that.openModal2 },
@@ -33365,7 +33365,7 @@ module.exports = React.createClass({
 			React.createElement(
 				Modal,
 				{ isOpen: this.state.modalIsOpen, onRequestClose: this.closeModal },
-				React.createElement(NewPost, { closeModal: this.closeModal, blogCollection: blogCollection })
+				React.createElement(NewPost, { closeModal: this.closeModal, blogCollection: blogCollection, blog: blogCollection.get(this.state.modelToGet) })
 			),
 			React.createElement(
 				Modal,
@@ -33378,7 +33378,7 @@ module.exports = React.createClass({
 		);
 	},
 	openModal: function openModal() {
-		this.setState({ modalIsOpen: true });
+		this.setState({ modalIsOpen: true, modelToGet: null });
 	},
 	closeModal: function closeModal() {
 		this.setState({ modalIsOpen: false });
@@ -33388,6 +33388,15 @@ module.exports = React.createClass({
 	},
 	closeModal2: function closeModal2() {
 		this.setState({ modalIsOpen2: false });
+	},
+	deletePost: function deletePost() {
+		var cid = event.path[1].getAttribute("value");
+		blogCollection.remove(blogCollection.get({ cid: cid }));
+		this.forceUpdate();
+	},
+	editPost: function editPost() {
+		var cid = event.path[1].getAttribute("value");
+		this.setState({ modalIsOpen: true, modelToGet: cid });
 	}
 });
 function pagination(array, page) {
@@ -33512,17 +33521,33 @@ module.exports = React.createClass({
 		};
 	},
 	render: function render() {
+		var blogToDo = [];
+		if (this.props.blog) {
+			var blogObj = { title: this.props.blog.get("title"), feelings: this.props.blog.get("feelings") };
+			blogToDo.push(React.createElement(
+				"button",
+				{ key: "update", onClick: this.updatePost, className: "btn btn-primary pull-right" },
+				"Post!"
+			));
+		} else {
+			var blogObj = { title: "", feelings: "" };
+			blogToDo.push(React.createElement(
+				"button",
+				{ key: "post", onClick: this.submitPost, className: "btn btn-primary pull-right" },
+				"Post!"
+			));
+		}
 		return React.createElement(
 			"div",
 			{ className: "blog-card center-block shift-down small-width overflow" },
-			React.createElement("input", { className: "style-input", ref: "title", type: "text", placeholder: "Title" }),
+			React.createElement("input", { className: "style-input", ref: "title", type: "text", defaultValue: blogObj.title, placeholder: "Title" }),
 			React.createElement(
 				"label",
 				{ className: "error" },
 				this.state.errors.title
 			),
 			React.createElement("br", null),
-			React.createElement("textarea", { className: "style-input", ref: "feelings", placeholder: "Tell me your feelings... " }),
+			React.createElement("textarea", { className: "style-input", ref: "feelings", defaultValue: blogObj.feelings, placeholder: "Tell me your feelings... " }),
 			React.createElement(
 				"label",
 				{ className: "error" },
@@ -33542,11 +33567,7 @@ module.exports = React.createClass({
 				{ onClick: this.props.closeModal, className: "btn btn-danger pull-left" },
 				"Close"
 			),
-			React.createElement(
-				"button",
-				{ onClick: this.submitPost, className: "btn btn-primary pull-right" },
-				"Post!"
-			)
+			blogToDo
 		);
 	},
 	submitPost: function submitPost() {
@@ -33563,12 +33584,20 @@ module.exports = React.createClass({
 			var that = this;
 			blogID++;
 			this.props.blogCollection.add(blog);
-			console.log(this.props.blogCollection);
 			window.setTimeout(function () {
 				that.props.closeModal();
 			}, 1500);
 			this.setState({ errors: { success: "Post submitted!" } });
 		}
+	},
+	updatePost: function updatePost() {
+		var that = this;
+		this.props.blog.set("title", this.refs.title.getDOMNode().value);
+		this.props.blog.set("feelings", this.refs.feelings.getDOMNode().value);
+		window.setTimeout(function () {
+			that.props.closeModal();
+		}, 1500);
+		this.setState({ errors: { success: "Post Updated!" } });
 	}
 });
 
@@ -33733,15 +33762,6 @@ var userCollection = new UserCollection();
 var Cookies = require("js-cookie");
 var containerEl = document.getElementById("container");
 var megaObj = Cookies.getJSON();
-var tempArray = [];
-
-// for(var people in megaObj){
-// 	var user = new User();
-// 	for(var props in megaObj[people]){
-// 		user.set(props, megaObj[people][props])
-// 	}
-// 	tempArray.push(user);	
-// } populate collection with users
 
 var Blog = Backbone.Router.extend({
 	routes: {

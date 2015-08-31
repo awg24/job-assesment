@@ -41,8 +41,8 @@ module.exports = React.createClass({
 		var button = [];
 		if(this.props.user.userType === "admin"){
 			button.push(<button key="add button" onClick={this.openModal} className="btn btn-primary">Submit a New Post!</button>);
-			links.push(<button key="button1" className="btn btn-info space">Edit</button>);
-			links.push(<button key="button2" className="btn btn-info space">Delete</button>);
+			links.push(<button key="button1" onClick={this.editPost} className="btn btn-info space">Edit</button>);
+			links.push(<button key="button2" onClick={this.deletePost} className="btn btn-info space">Delete</button>);
 		}
 		var that = this;
 		var sortedCollection = _.sortBy(blogCollection.models, function(blog){
@@ -51,7 +51,7 @@ module.exports = React.createClass({
 		var pagedContent = pagination(sortedCollection,this.props.page);
 		var blogs = pagedContent.map(function(blog, index){
 			return (
-			<div key={blog.cid} className="blog-card center-block">
+			<div key={blog.cid} value={blog.cid} className="blog-card center-block">
 				<button className="btn btn-primary" value={blog.id} onClick={that.openModal2}>View</button>
 				<div className="text-center">
 					<h3>{blog.get("title")}</h3>
@@ -70,7 +70,7 @@ module.exports = React.createClass({
 				{button}
 			</div>
 			<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal}>
-				<NewPost closeModal={this.closeModal} blogCollection={blogCollection}/>
+				<NewPost closeModal={this.closeModal} blogCollection={blogCollection} blog={blogCollection.get(this.state.modelToGet)}/>
 			</Modal>
 			<Modal isOpen={this.state.modalIsOpen2} onRequestClose={this.closeModal2}>
 				<SingleView closeModal={this.closeModal2} blog={blogCollection.get(this.state.modelToGet)}/>
@@ -82,7 +82,7 @@ module.exports = React.createClass({
 		);
 	},
 	openModal: function() {
-		this.setState({modalIsOpen: true});
+		this.setState({modalIsOpen: true, modelToGet:null});
 	},
 	closeModal: function() {
 		this.setState({modalIsOpen: false});
@@ -93,6 +93,15 @@ module.exports = React.createClass({
 	closeModal2: function() {
 		this.setState({modalIsOpen2: false});
 	},
+	deletePost: function(){
+		var cid = event.path[1].getAttribute("value");
+		blogCollection.remove(blogCollection.get({cid: cid}));
+		this.forceUpdate();
+	},
+	editPost: function(){
+		var cid = event.path[1].getAttribute("value");
+		this.setState({modalIsOpen: true, modelToGet:cid});
+	}
 });
 function pagination(array, page){
 	var sectionOf = [];
