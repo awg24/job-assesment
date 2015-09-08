@@ -23,9 +23,9 @@ module.exports = React.createClass({
 				<input className="style-input2" ref="password" type="password" placeholder="super secret password"/>
 				<label className="error">{this.state.errors.password}</label>
 				<br/><br/>
-				admin:  <input name="user-type" value="admin" type="radio"/>
+				<label>admin:</label>  <input name="user-type" value="admin" type="radio"/>
 				<div className="in-line"> </div>
-				reader: <input name="user-type" value="reader" type="radio"/>
+				<label>reader:</label> <input name="user-type" value="reader" type="radio"/>
 				<label className="error">{this.state.errors.userType}</label>
 				<br/><br/>
 				<input type="submit" className="btn btn-primary btn-md center-block add-bottom-margin"Login />

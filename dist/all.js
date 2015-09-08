@@ -33460,14 +33460,24 @@ module.exports = React.createClass({
 				),
 				React.createElement("br", null),
 				React.createElement("br", null),
-				"admin:  ",
+				React.createElement(
+					"label",
+					null,
+					"admin:"
+				),
+				"  ",
 				React.createElement("input", { name: "user-type", value: "admin", type: "radio" }),
 				React.createElement(
 					"div",
 					{ className: "in-line" },
 					" "
 				),
-				"reader: ",
+				React.createElement(
+					"label",
+					null,
+					"reader:"
+				),
+				" ",
 				React.createElement("input", { name: "user-type", value: "reader", type: "radio" }),
 				React.createElement(
 					"label",
