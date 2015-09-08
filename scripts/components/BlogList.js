@@ -14,26 +14,18 @@ Modal.injectCSS()
 
 module.exports = React.createClass({
 	componentWillMount: function(){
-		if(blogCollection.length === 0){
-			for(var i = 0; i < 16; i++){
-				var fakePost = new FakePost();
-				fakePost.set("id", i);
-				fakePost.set("title", "Title "+i);
-				fakePost.set("feelings", "content "+i);
-				if(i < 10){
-					fakePost.set("createdAt", new Date('December 17, 1995 03:24:0'+i));
-				} else {
-					fakePost.set("createdAt", new Date('December 17, 1995 03:24:'+i));
-				}
-				blogCollection.add(fakePost);
-			}
-		}
+		var that = this;
+		blogCollection.fetch().then(function(data){
+			that.forceUpdate();
+		});
 	},
+
 	getInitialState: function() {
 		return { 
 			modalIsOpen: false,
 			modalIsOpen2: false, 
-			modelToGet: null
+			modelToGet: null,
+			blogs: null
 		};
 	 },
 	render: function(){
@@ -46,7 +38,8 @@ module.exports = React.createClass({
 		}
 		var that = this;
 		var sortedCollection = _.sortBy(blogCollection.models, function(blog){
-			return -1*blog.get("createdAt").getTime();
+			var date = new Date(blog.get("createdAt"));
+			return -1*date.getTime();
 		});
 		var pagedContent = pagination(sortedCollection,this.props.page);
 		var blogs = pagedContent.map(function(blog, index){

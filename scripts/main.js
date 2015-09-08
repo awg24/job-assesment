@@ -1,5 +1,6 @@
 var React = require('react');
 var Backbone = require("backbone");
+var _ = require("backbone/node_modules/underscore");
 
 var Login = require("./components/Login");
 var BlogList = require("./components/BlogList");

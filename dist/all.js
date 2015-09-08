@@ -33238,7 +33238,8 @@ var Backbone = require("backbone");
 var BlogModel = require("../models/BlogModel");
 
 module.exports = Backbone.Collection.extend({
-	model: BlogModel
+	model: BlogModel,
+	url: "http://www.mockaroo.com/api/generate.json?key=e71c61c0&schema=blogList"
 });
 
 },{"../models/BlogModel":180,"backbone":1}],172:[function(require,module,exports){
@@ -33272,26 +33273,18 @@ module.exports = React.createClass({
 	displayName: "exports",
 
 	componentWillMount: function componentWillMount() {
-		if (blogCollection.length === 0) {
-			for (var i = 0; i < 16; i++) {
-				var fakePost = new FakePost();
-				fakePost.set("id", i);
-				fakePost.set("title", "Title " + i);
-				fakePost.set("feelings", "content " + i);
-				if (i < 10) {
-					fakePost.set("createdAt", new Date('December 17, 1995 03:24:0' + i));
-				} else {
-					fakePost.set("createdAt", new Date('December 17, 1995 03:24:' + i));
-				}
-				blogCollection.add(fakePost);
-			}
-		}
+		var that = this;
+		blogCollection.fetch().then(function (data) {
+			that.forceUpdate();
+		});
 	},
+
 	getInitialState: function getInitialState() {
 		return {
 			modalIsOpen: false,
 			modalIsOpen2: false,
-			modelToGet: null
+			modelToGet: null,
+			blogs: null
 		};
 	},
 	render: function render() {
@@ -33316,7 +33309,8 @@ module.exports = React.createClass({
 		}
 		var that = this;
 		var sortedCollection = _.sortBy(blogCollection.models, function (blog) {
-			return -1 * blog.get("createdAt").getTime();
+			var date = new Date(blog.get("createdAt"));
+			return -1 * date.getTime();
 		});
 		var pagedContent = pagination(sortedCollection, this.props.page);
 		var blogs = pagedContent.map(function (blog, index) {
@@ -33751,6 +33745,7 @@ module.exports = React.createClass({
 
 var React = require('react');
 var Backbone = require("backbone");
+var _ = require("backbone/node_modules/underscore");
 
 var Login = require("./components/Login");
 var BlogList = require("./components/BlogList");
@@ -33785,7 +33780,7 @@ var Blog = Backbone.Router.extend({
 var myRoutes = new Blog();
 Backbone.history.start();
 
-},{"./collections/UserCollection":172,"./components/BlogList":173,"./components/Login":174,"./components/NewPost":175,"./components/NoPermission":176,"./models/UserModel":181,"backbone":1,"js-cookie":5,"react":170}],180:[function(require,module,exports){
+},{"./collections/UserCollection":172,"./components/BlogList":173,"./components/Login":174,"./components/NewPost":175,"./components/NoPermission":176,"./models/UserModel":181,"backbone":1,"backbone/node_modules/underscore":2,"js-cookie":5,"react":170}],180:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -33813,7 +33808,8 @@ module.exports = Backbone.Model.extend({
 		} else {
 			return errors;
 		}
-	}
+	},
+	urlRoot: "http://www.mockaroo.com/api/generate.json?key=e71c61c0&schema=blogList"
 });
 
 },{"backbone":1,"backbone/node_modules/underscore":2,"react":170}],181:[function(require,module,exports){

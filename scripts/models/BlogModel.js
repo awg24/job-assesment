@@ -23,5 +23,6 @@ module.exports = Backbone.Model.extend({
 		} else {
 			return errors;
 		}
-	}
+	},
+	urlRoot: "http://www.mockaroo.com/api/generate.json?key=e71c61c0&schema=blogList"
 });
