@@ -16,6 +16,8 @@ module.exports = React.createClass({
 	componentWillMount: function(){
 		var that = this;
 		blogCollection.fetch().then(function(data){
+			console.log(data);
+		}).done(function(){
 			that.forceUpdate();
 		});
 	},
@@ -24,8 +26,7 @@ module.exports = React.createClass({
 		return { 
 			modalIsOpen: false,
 			modalIsOpen2: false, 
-			modelToGet: null,
-			blogs: null
+			modelToGet: null
 		};
 	 },
 	render: function(){
@@ -37,6 +38,7 @@ module.exports = React.createClass({
 			links.push(<button key="button2" onClick={this.deletePost} className="btn btn-info space">Delete</button>);
 		}
 		var that = this;
+		console.log(blogCollection);
 		var sortedCollection = _.sortBy(blogCollection.models, function(blog){
 			var date = new Date(blog.get("createdAt"));
 			return -1*date.getTime();
@@ -47,7 +49,7 @@ module.exports = React.createClass({
 			<div key={blog.cid} value={blog.cid} className="blog-card center-block">
 				<button className="btn btn-primary" value={blog.id} onClick={that.openModal2}>View</button>
 				<div className="text-center">
-					<h3>{blog.get("title")}</h3>
+					<h2>{blog.get("title")}</h2>
 				</div>
 				<div className="content-box padit">
 					<p>{blog.get("feelings")}</p>

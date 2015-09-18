@@ -33275,6 +33275,8 @@ module.exports = React.createClass({
 	componentWillMount: function componentWillMount() {
 		var that = this;
 		blogCollection.fetch().then(function (data) {
+			console.log(data);
+		}).done(function () {
 			that.forceUpdate();
 		});
 	},
@@ -33283,8 +33285,7 @@ module.exports = React.createClass({
 		return {
 			modalIsOpen: false,
 			modalIsOpen2: false,
-			modelToGet: null,
-			blogs: null
+			modelToGet: null
 		};
 	},
 	render: function render() {
@@ -33308,6 +33309,7 @@ module.exports = React.createClass({
 			));
 		}
 		var that = this;
+		console.log(blogCollection);
 		var sortedCollection = _.sortBy(blogCollection.models, function (blog) {
 			var date = new Date(blog.get("createdAt"));
 			return -1 * date.getTime();
@@ -33326,7 +33328,7 @@ module.exports = React.createClass({
 					"div",
 					{ className: "text-center" },
 					React.createElement(
-						"h3",
+						"h2",
 						null,
 						blog.get("title")
 					)
@@ -33731,7 +33733,7 @@ module.exports = React.createClass({
 				"div",
 				{ className: "text-center" },
 				React.createElement(
-					"h3",
+					"h2",
 					null,
 					this.props.blog.get("title")
 				)
